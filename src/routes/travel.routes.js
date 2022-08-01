@@ -1,9 +1,9 @@
 import express from "express";
+import { quotation } from "../controllers/quotationController.js";
 import { addTravel, getTravels, getTravelById, updateTravel, deleteTravel } from "../controllers/travelController.js";
 const routerTravel = express.Router();
 
 
-import { quotation } from "../controllers/quotationController.js";
 
 //get all users
 routerTravel.get("/", getTravels);

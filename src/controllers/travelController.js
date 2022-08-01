@@ -14,7 +14,7 @@ import { JourneyAccomodation } from '../models/accommodation.model.js';
         const user = await JourneyUser.findById(userId);
         const fligth = await JourneyFlight.findById(req.body.flightId);
         const accomodation = await JourneyAccomodation.findById(req.body.accomodationId);
-
+        
         const travel = new JourneyTravel({
             name, 
             description,

@@ -1,20 +1,28 @@
 import { JourneyTravel } from '../models/travel.model.js';  
 
-
-
-export function create ( travel ) {
-    return new Promise( ( resolve, reject ) => {
-        Travel.create( travel, ( err, travel ) => {
-            if ( err ) {
-                reject( err );
-            }
-            else {
-                resolve( travel );
-            }
-        } );
-    } );
+//create a function to send json of a travel
+export const sendJson = (travel) => {
+    return {
+        id: travel._id,
+        name: travel.name,
+        description: travel.description,
+        startDate: travel.startDate,
+        endDate: travel.endDate,
+        flightId: travel.flightId,
+        accomodationId: travel.accomodationId,
+        userId: travel.userId,
+    };
 }
 
 
 
-export { create } ;
+
+
+
+export function create (  ) {
+    
+}
+
+
+
+export { create, sendJson } ;
