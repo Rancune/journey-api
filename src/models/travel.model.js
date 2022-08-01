@@ -15,8 +15,8 @@ const travelSchema = Schema(
     },
 );
 
-const TravelModel = mongoose.model("JourneyTravel", travelSchema);
-export default TravelModel;
+export const JourneyTravel = mongoose.model("JourneyTravel", travelSchema);
+//export default JourneyTravel;
 
 
 

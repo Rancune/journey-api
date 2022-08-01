@@ -1,8 +1,8 @@
 //ICI c'est le CRUD DES TRAVELS
-import { Travel } from '../models/travelModel.js';  
-import { User } from '../models/userModel.js';  
-import { Flight } from '../models/flightModel.js';
-import { Accomodation } from '../models/accomodationModel.js';
+import { JourneyTravel } from '../models/travel.model.js';  
+import { JourneyUser } from '../models/userModel.js';  
+import { JourneyFlight } from '../models/flight.model.js';
+import { JourneyAccomodation } from '../models/accommodation.model.js';
 
 
 //Create Crud for travel from travel model 
@@ -11,11 +11,11 @@ import { Accomodation } from '../models/accomodationModel.js';
     const addTravel = async (req, res) => {
         const {  name, description, price, startDate, endDate, flightId, accomodationId, userId } = req.body;
 
-        const user = await User.findById(userId);
-        const fligth = await Flight.findById(req.body.flightId);
-        const accomodation = await Accomodation.findById(req.body.accomodationId);
+        const user = await JourneyUser.findById(userId);
+        const fligth = await JourneyFlight.findById(req.body.flightId);
+        const accomodation = await JourneyAccomodation.findById(req.body.accomodationId);
 
-        const travel = new Travel({
+        const travel = new JourneyTravel({
             name, 
             description,
             price,
@@ -32,14 +32,14 @@ import { Accomodation } from '../models/accomodationModel.js';
 
     //Get all travels
     const getTravels = async (req, res) => {
-        const travels = await Travel.find();
+        const travels = await JourneyTravel.find();
         res.send(travels);
     }
 
     //Get a travel by id
     const getTravelById = async (req, res) => {
         const { id } = req.params;
-        const travel = await Travel.findById(id);
+        const travel = await JourneyTravel.findById(id);
         console.log('########################### travel found ###########################');
         res.send(travel);
     }
@@ -48,7 +48,7 @@ import { Accomodation } from '../models/accomodationModel.js';
     const updateTravel = async (req, res) => {
         const { id } = req.params;
         const { name, description, price, startDate, endDate, flightId, accomodationId, userId } = req.body;
-        const travel = await Travel.findByIdAndUpdate(id, {
+        const travel = await JourneyTravel.findByIdAndUpdate(id, {
             name,
             description,
             price,
@@ -65,7 +65,7 @@ import { Accomodation } from '../models/accomodationModel.js';
     //Delete a travel
     const deleteTravel = async (req, res) => {
         const { id } = req.params;
-        await Travel.findByIdAndDelete(id);
+        await JourneyTravel.findByIdAndDelete(id);
         console.log('########################### travel deleted ###########################');
         res.send('travel deleted');
     }

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
-import { JourneyTravel } from "../../models/travel.model";
+import { JourneyTravel } from "../../models/travel.model.js";
 
 export const addTravelTest = async () => {
 
@@ -10,9 +10,9 @@ export const addTravelTest = async () => {
         price: 10000,
         startDate: new Date("2020-01-01"),
         endDate: new Date("2020-01-02"),
-        flightId: "",
-        accommodationId: "",
-        userId: " ",
+        flightId: "62e7b79dd692a9f51ab4a572",
+        accommodationId: "62e7b79dd692a9f51ab4a574",
+        userId: "62e7b79dd692a9f51ab4a570",
     });
 
     await journeyTravel.save();
