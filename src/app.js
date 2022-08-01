@@ -32,7 +32,6 @@ const startApp = async () => {
   await addAccomodationTest();// for test purpose
   await addTravelTest();// for test purpose
 
-
   app.listen(port, () => {
       console.log(`I AM LISTENNING THE SERVER ON PORT ${port}, WITNESS ME!`)
     }

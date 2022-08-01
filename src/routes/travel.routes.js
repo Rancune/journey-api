@@ -3,7 +3,7 @@ import { addTravel, getTravels, getTravelById, updateTravel, deleteTravel } from
 const routerTravel = express.Router();
 
 
-
+import { quotation } from "../controllers/quotationController.js";
 
 //get all users
 routerTravel.get("/", getTravels);
@@ -19,6 +19,20 @@ routerTravel.put("/:id", updateTravel);
 
 //delete user
 routerTravel.delete("/:id", deleteTravel);
+
+//Send quotation
+routerTravel.post("/quotation", async (req: Request, res: Response) )=> {
+    try {
+        const quotation = await quotationController.create(req.body);
+        res.status(201).json(quotation);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+
+        
 
 
 
