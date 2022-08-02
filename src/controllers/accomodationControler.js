@@ -23,8 +23,19 @@ import { Accommodation } from '../models/accomodationModel.js';
 
     //Récupération de tous les hébergements
     const getAccommodations = async (req, res) => {
-        const accomodations = await Accommodation.find();
-        res.send(accomodations);
+        const { name, adult, checkInDate, checkOutDate , room } = req.query;
+        if (!name || !adult || !checkInDate || !checkOutDate || !room) {
+            throw new Error('Missing parameters');
+        }
+
+        const { data } = await amadeus.shopping.hotel.get({
+            originLocationCode: departure,
+            destinationLocationCode: destination,
+            departureDate: departureDate,
+            adults: capacity,
+            // max: 1,
+          });
+      
     }
 
     //Récupération d'un hébergement par son id

@@ -67,11 +67,11 @@ const getFlights = async (req, res) => {
       destinationLocationCode: destination,
       departureDate: departureDate,
       adults: capacity,
-      // max: 1,
+      //max: 1,
     });
 
 
-    
+
     // send results
     // store in cache for 1 hour
    // await setInCache(redis_key, JSON.stringify(data), 60);

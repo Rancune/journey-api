@@ -24,20 +24,21 @@ app.use("/flight", flightTravel);
 
 const startApp = async () => {
   try {
-    await connectDatabase();
-   // await loadCacheController();
-  } catch (error) {
-    console.log(error);
-  }
-
-  // await addUserTest(); // for test purpose
-  // await addFlightTest(); // for test purpose
-  // await addAccomodationTest(); // for test purpose
-  // await addTravelTest(); // for test purpose
-
-  app.listen(port, () => {
-    console.log(`I AM LISTENNING THE SERVER ON PORT ${port}, WITNESS ME!`);
-  });
+      await connectDatabase();
+      // await loadCacheController();
+    } catch (error) {
+      console.log(error);
+    }
+    
+    
+    // await addUserTest(); // for test purpose
+    // await addFlightTest(); // for test purpose
+    // await addAccomodationTest(); // for test purpose
+    // await addTravelTest(); // for test purpose
+    
+    app.listen(port, () => {
+      console.log(`I AM LISTENNING THE SERVER ON PORT ${port}, WITNESS ME!`);
+    });
 };
 
 startApp();
