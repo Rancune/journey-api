@@ -46,18 +46,22 @@ const getFlights = async (req, res) => {
     if (!departure || !destination || !departureDate || !capacity) {
       throw new Error("Missing parameters");
     }
-    const redis_key = makeCacheKey(
-      "flights",
-      `${departure}-${destination}-${departureDate}-${capacity}`
-    );
-    const cache = await getFromCache(redis_key);
-    // check if request result was cached recently
-    if (cache) {
-      console.log(
-        "########################### Flight found in cache ###########################"
-      );
-      return res.json(JSON.parse(cache));
-    }
+
+
+
+    // const redis_key = makeCacheKey(
+    //   "flights",
+    //   `${departure}-${destination}-${departureDate}-${capacity}`
+    // );
+    // const cache = await getFromCache(redis_key);
+    // // check if request result was cached recently
+    // if (cache) {
+    //   console.log("########################### Flight found in cache ###########################");
+    //   return res.json(JSON.parse(cache));
+    // }
+
+
+
     const { data } = await amadeus.shopping.flightOffersSearch.get({
       originLocationCode: departure,
       destinationLocationCode: destination,
@@ -65,13 +69,17 @@ const getFlights = async (req, res) => {
       adults: capacity,
       // max: 1,
     });
+
+
+    
     // send results
     // store in cache for 1 hour
-    await setInCache(redis_key, JSON.stringify(data), 60);
+   // await setInCache(redis_key, JSON.stringify(data), 60);
+
     res.send(data);
   } catch (error) {
     console.log(
-      "######################################",
+      "#################^^^^^^#####################",
       error,
       "######################################"
     );

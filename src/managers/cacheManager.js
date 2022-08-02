@@ -5,12 +5,13 @@ const cacheClient = createClient({
   password: process.env.REDIS_PASSWORD,
 });
 cacheClient.on("error", (err) => {
+  console.log("cache client UP");
   console.log("Error " + err);
 });
 
 export const loadCacheController = async () => {
   await cacheClient.connect();
-  console.log("Connected to redis");
+  console.log("############ Connected to redis ############");
 };
 
 export const makeCacheKey = (category, id) => `journey:${category}-${id}`;

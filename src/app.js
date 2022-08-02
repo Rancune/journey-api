@@ -25,9 +25,9 @@ app.use("/flight", flightTravel);
 const startApp = async () => {
   try {
     await connectDatabase();
-    await loadCacheController();
+   // await loadCacheController();
   } catch (error) {
-    RancuneConsole(error);
+    console.log(error);
   }
 
   // await addUserTest(); // for test purpose
@@ -36,10 +36,10 @@ const startApp = async () => {
   // await addTravelTest(); // for test purpose
 
   app.listen(port, () => {
-    RancuneConsole(`I AM LISTENNING THE SERVER ON PORT ${port}, WITNESS ME!`);
+    console.log(`I AM LISTENNING THE SERVER ON PORT ${port}, WITNESS ME!`);
   });
 };
 
 startApp();
 
-const RancuneConsole = (text) => process.env.DEBUG && console.log(text);
+//const RancuneConsole = (text) => process.env.DEBUG && console.log(text);
