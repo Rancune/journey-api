@@ -1,5 +1,4 @@
 import express from "express";
-import { quotation } from "../controllers/quotationController.js";
 import { addTravel, getTravels, getTravelById, updateTravel, deleteTravel } from "../controllers/travelController.js";
 const routerTravel = express.Router();
 
@@ -21,15 +20,15 @@ routerTravel.put("/:id", updateTravel);
 routerTravel.delete("/:id", deleteTravel);
 
 //Send quotation
-routerTravel.post("/quotation", async (req: Request, res: Response) )=> {
-    try {
-        const quotation = await quotationController.create(req.body);
-        res.status(201).json(quotation);
-    }
-    catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-}
+// routerTravel.post("/quotation", async (req, res) )=> {
+//     try {
+//         const quotation = await quotationController.create(req.body);
+//         res.status(201).json(quotation);
+//     }
+//     catch (err) {
+//         res.status(500).json({ message: err.message });
+//     }
+// }
 
 
         

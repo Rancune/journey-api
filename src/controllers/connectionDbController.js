@@ -1,35 +1,38 @@
-import pkg from "mongoose"; // cant use named import here ?
-const { connect } = pkg;
+import mongoose from "mongoose"; // cant use named import here ?
 
+// db connection
+let db;
 
-export const connectDatabase = async () => {
-
-  // connect(process.env.MONGO_DB_HOST, {
-  //   user: process.env.MONGO_DB_USER,
-  //   dbName: process.env.MONGO_DB_DATABASE,
-  //   pass: process.env.MONGO_DB_PASS,
-  //   authSource: process.env.MONGO_DB_AUTH_SOURCE,
-  //   authMechanism: process.env.MONGO_DB_AUTH_MECHANISM,
-  //   maxPoolSize: 10, // Maintain up to 10 socket connections
-  //   // serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-  //   // socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-  // });
-
+export const connectDatabase = async () =>
+  new Promise((resolve, reject) => {
+    mongoose.connect(
+      process.env.MONGO_DB_HOST,
+      {
+        user: process.env.MONGO_DB_USER,
+        pass: process.env.MONGO_DB_PASS,
+        dbName: process.env.MONGO_DB_DATABASE,
+        // authSource: process.env.MONGO_DB_AUTH_SOURCE,
+        // authMechanism: process.env.MONGO_DB_AUTH_MECHANISM,
+        maxPoolSize: 10, // Maintain up to 10 socket connections
+        // serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+        // socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+      },
+      (err) => {
+        if (err) {
+          reject(err);
+        }
+        console.log("########### Connected to database ###########");
+        resolve();
+      }
+    );
+  });
 
  
       
-  await connect('mongodb://root:root@localhost:27017/voyage?authSource=admin&authMechanism=DEFAULT');// je sais foutre pas pourquoi ni comment le authSource fonctionne 
-
-  console.log('########################### Database connected ###########################');
-
-
-  console.log('########################### connected to database ###########################');
+ // await connect('mongodb://root:root@localhost:27017/voyage?authSource=admin&authMechanism=DEFAULT');// je sais foutre pas pourquoi ni comment le authSource fonctionne 
 
 
 
-  //await listDatabases();
-}
 
-connectDatabase().catch(err => console.log(err));
 
 
