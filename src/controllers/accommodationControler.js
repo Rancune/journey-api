@@ -1,13 +1,24 @@
 //ICI c'est le CRUD du AccomodationController
 
-import { Accommodation } from '../models/accomodationModel.js';
+import { JourneyAccomodation } from '../models/accommodation.model.js';
+import Amadeus from "amadeus";
 
-//create CRUD for accomodations from accommodation.model.js
+//const Amad = require('amadeus');
+
+const AMADEUS_CLIENT_ID = "***REMOVED***";
+const AMADEUS_CLIENT_SECRET = "***REMOVED***";
+
+const amadeus = new Amadeus({
+  clientId: AMADEUS_CLIENT_ID,
+  clientSecret: AMADEUS_CLIENT_SECRET,
+});
+
+//create CRUD for accomodations from accommodation.model.js 
 
     //Création d'un hébergement
     const addAccommodation = async (req, res) => {
         const { name, address, city, country, zipCode, description, stars } = req.body;
-        const journeyAccommodation = new Accommodation({
+        const journeyAccommodation = new JourneyAccomodation({
             name,
             address,
             city,
@@ -23,25 +34,38 @@ import { Accommodation } from '../models/accomodationModel.js';
 
     //Récupération de tous les hébergements
     const getAccommodations = async (req, res) => {
-        const { name, adult, checkInDate, checkOutDate , room } = req.query;
-        if (!name || !adult || !checkInDate || !checkOutDate || !room) {
-            throw new Error('Missing parameters');
+        try{
+            const { name, adults, checkInDate, checkOutDate } = req.query;
+            if (!name || !adults || !checkInDate || !checkOutDate) {
+                throw new Error('Missing parameters');
+            }
+
+            const { data } = await amadeus.shopping.hotelOffersSearch.get({
+                hotelIds: name,
+                adults: adults,
+                checkInDate: checkInDate,
+                checkOutDate: checkOutDate,
+                roomQuantity: 1
+            });
+
+            console.log('########################### Accommodations found ###########################');
+
+            res.send(data);
+        } catch (error) {
+        console.log(
+            "######################################",
+            error,
+            "######################################"
+        );
+        res.status(400).json("wallah y a rien frr");
         }
 
-        const { data } = await amadeus.shopping.hotel.get({
-            originLocationCode: departure,
-            destinationLocationCode: destination,
-            departureDate: departureDate,
-            adults: capacity,
-            // max: 1,
-          });
-      
-    }
+    };
 
     //Récupération d'un hébergement par son id
     const getAccommodationById = async (req, res) => {
         const { id } = req.params;
-        const accomodation = await Accommodation.findById(id);
+        const accomodation = await JourneyAccomodation.findById(id);
         console.log('########################### Accommodation found ###########################');
         res.send(accomodation);
     }
@@ -50,7 +74,7 @@ import { Accommodation } from '../models/accomodationModel.js';
     const updateAccommodation = async (req, res) => {
         const { id } = req.params;
         const { name, address, city, country, zipCode, description, stars } = req.body;
-        const accomodation = await Accommodation.findByIdAndUpdate(id, {
+        const accomodation = await JourneyAccomodation.findByIdAndUpdate(id, {
             name,
             address,
             city,
@@ -66,7 +90,7 @@ import { Accommodation } from '../models/accomodationModel.js';
     //Suppression d'un hébergement
     const deleteAccommodation = async (req, res) => {
         const { id } = req.params;
-        await Accommodation.findByIdAndDelete(id);
+        await JourneyAccomodation.findByIdAndDelete(id);
         console.log('########################### Accommodation deleted ###########################');
         res.send('Accommodation deleted');
     }

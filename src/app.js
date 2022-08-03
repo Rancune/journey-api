@@ -5,7 +5,10 @@ import express from "express";
 import routerUser from "./routes/user.routes.js";
 import routerTravel from "./routes/travel.routes.js";
 import flightTravel from "./routes/flight.routes.js";
-import { loadCacheController } from "./managers/cacheManager.js";
+import accommodationTravel from "./routes/accommodation.routes.js";
+//import { loadCacheController } from "./managers/cacheManager.js";
+
+
 
 //For Test PURPOSE ONLY
 // import { addUserTest } from "./controllers/test/addUserTestController.js"; // for test purpose
@@ -21,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/user", routerUser);
 app.use("/travel", routerTravel);
 app.use("/flight", flightTravel);
+app.use("/hotels", accommodationTravel);
 
 const startApp = async () => {
   try {

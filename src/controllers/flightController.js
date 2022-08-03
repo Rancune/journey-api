@@ -12,7 +12,7 @@ const AMADEUS_CLIENT_SECRET = "***REMOVED***";
 
 const amadeus = new Amadeus({
   clientId: AMADEUS_CLIENT_ID,
-  clientSecret: AMADEUS_CLIENT_SECRET,
+  clientSecret: AMADEUS_CLIENT_SECRET
 });
 //create CRUD for flights
 
@@ -75,7 +75,7 @@ const getFlights = async (req, res) => {
     // send results
     // store in cache for 1 hour
    // await setInCache(redis_key, JSON.stringify(data), 60);
-
+   console.log("########################### Flight found ###########################");
     res.send(data);
   } catch (error) {
     console.log(
