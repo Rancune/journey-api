@@ -35,10 +35,19 @@ const amadeus = new Amadeus({
     //Récupération de tous les hébergements
     const getAccommodations = async (req, res) => {
         try{
-            const { name, adults, checkInDate, checkOutDate } = req.query;
-            if (!name || !adults || !checkInDate || !checkOutDate) {
+            const { city, name, adults, checkInDate, checkOutDate } = req.query;
+            if (!city || !name || !adults || !checkInDate || !checkOutDate) {
                 throw new Error('Missing parameters');
             }
+
+            const { hotelList } = await amadeus.referenceData.locations.hotels.byCity.get({
+                cityCode: city,
+                radius: '5',
+                radiusUnit: 'KM',
+                hotelSource: 'ALL'
+
+            });
+
 
             const { data } = await amadeus.shopping.hotelOffersSearch.get({
                 hotelIds: name,
@@ -50,7 +59,8 @@ const amadeus = new Amadeus({
 
             console.log('########################### Accommodations found ###########################');
 
-            res.send(data);
+            res.send(hotelList);
+            //res.send(data);
         } catch (error) {
         console.log(
             "######################################",
