@@ -50,19 +50,15 @@ const amadeus = new Amadeus({
             console.log('########################### Hotel List UP ###########################');
 
             //parse json to get the hotel id
-            const hotelID = data.map(hotel => {      
-                return {
-                    id:hotel.hotelId,
-                }
+            const hotelID = data.map(hotel => {
+                return hotel.hotelId;
             }
             );
 
-            console.log(hotelID[0].id);
-
-            const  name  =  hotelID[0].id;
+            // console.log(hotelID);
         
             const  { result } = await amadeus.shopping.hotelOffersSearch.get({
-                hotelIds: name,
+                hotelIds: hotelID.join(','),
                 adults: adults,
                 checkInDate: checkInDate,
                 checkOutDate: checkOutDate,
@@ -86,38 +82,6 @@ const amadeus = new Amadeus({
 
     };
 
-    //Récupération de tous les hébergements par leur nom
-    const getAccommodationsByName = async (hotelID, req, res) => {
-        try{
-
-            const { name } =  hotelID;
-            const { adults, checkInDate, checkOutDate } = req.query;
-
-            if (!name || !adults || !checkInDate || !checkOutDate) {
-                throw new Error('Missing parameters');
-            }
-        
-            const { data } = await amadeus.shopping.hotelOffersSearch.get({
-                hotelIds: name,
-                adults: adults,
-                checkInDate: checkInDate,
-                checkOutDate: checkOutDate,
-                roomQuantity: 1
-            });
-
-            console.log('########################### Accommodations found by name ###########################');
-
-            res.send(data);
-
-        } catch (error) {
-        console.log(
-            "######################################",
-            error,
-            "######################################"
-        );
-        res.status(400).json("wallah y a rien frr");
-        }
-    } 
 
     //Récupération d'un hébergement par son id
     const getAccommodationById = async (req, res) => {
