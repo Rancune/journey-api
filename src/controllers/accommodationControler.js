@@ -3,7 +3,6 @@
 import { JourneyAccomodation } from '../models/accommodation.model.js';
 import Amadeus from "amadeus";
 
-//const Amad = require('amadeus');
 
 const AMADEUS_CLIENT_ID = "***REMOVED***";
 const AMADEUS_CLIENT_SECRET = "***REMOVED***";
@@ -35,32 +34,47 @@ const amadeus = new Amadeus({
     //Récupération de tous les hébergements
     const getAccommodations = async (req, res) => {
         try{
-            const { city, name, adults, checkInDate, checkOutDate } = req.query;
-            if (!city || !name || !adults || !checkInDate || !checkOutDate) {
-                throw new Error('Missing parameters');
+
+            const { city, adults, checkInDate, checkOutDate  } = req.query;
+            if (!city || !adults || !checkInDate || !checkOutDate ) {
+                throw new Error('Missing City');
             }
 
-            const { hotelList } = await amadeus.referenceData.locations.hotels.byCity.get({
+            const { data } = await amadeus.referenceData.locations.hotels.byCity.get({
                 cityCode: city,
                 radius: '5',
                 radiusUnit: 'KM',
-                hotelSource: 'ALL'
+              }             
+            );
 
-            });
+            console.log('########################### Hotel List UP ###########################');
 
+            //parse json to get the hotel id
+            const hotelID = data.map(hotel => {      
+                return {
+                    id:hotel.hotelId,
+                }
+            }
+            );
 
-            const { data } = await amadeus.shopping.hotelOffersSearch.get({
+            console.log(hotelID[0].id);
+
+            const  name  =  hotelID[0].id;
+        
+            const  { result } = await amadeus.shopping.hotelOffersSearch.get({
                 hotelIds: name,
                 adults: adults,
                 checkInDate: checkInDate,
                 checkOutDate: checkOutDate,
                 roomQuantity: 1
-            });
+            }
+            );
+          
+            console.log('########################### Accommodations found by name ###########################');
+            console.log(result);
 
-            console.log('########################### Accommodations found ###########################');
+            res.send(result);
 
-            res.send(hotelList);
-            //res.send(data);
         } catch (error) {
         console.log(
             "######################################",
@@ -72,12 +86,67 @@ const amadeus = new Amadeus({
 
     };
 
+    //Récupération de tous les hébergements par leur nom
+    const getAccommodationsByName = async (hotelID, req, res) => {
+        try{
+
+            const { name } =  hotelID;
+            const { adults, checkInDate, checkOutDate } = req.query;
+
+            if (!name || !adults || !checkInDate || !checkOutDate) {
+                throw new Error('Missing parameters');
+            }
+        
+            const { data } = await amadeus.shopping.hotelOffersSearch.get({
+                hotelIds: name,
+                adults: adults,
+                checkInDate: checkInDate,
+                checkOutDate: checkOutDate,
+                roomQuantity: 1
+            });
+
+            console.log('########################### Accommodations found by name ###########################');
+
+            res.send(data);
+
+        } catch (error) {
+        console.log(
+            "######################################",
+            error,
+            "######################################"
+        );
+        res.status(400).json("wallah y a rien frr");
+        }
+    } 
+
     //Récupération d'un hébergement par son id
     const getAccommodationById = async (req, res) => {
-        const { id } = req.params;
-        const accomodation = await JourneyAccomodation.findById(id);
-        console.log('########################### Accommodation found ###########################');
-        res.send(accomodation);
+        try{
+            const {name, adults, checkInDate, checkOutDate } = req.query;
+            if (!name || !adults || !checkInDate || !checkOutDate) {
+                throw new Error('Missing parameters');
+            }
+
+
+            const { data } = await amadeus.shopping.hotelOffersSearch.get({
+                hotelIds: name,
+                adults: adults,
+                checkInDate: checkInDate,
+                checkOutDate: checkOutDate,
+                roomQuantity: 1
+            });
+
+            console.log('########################### Accommodations found by id ###########################');
+
+            res.send(data);
+        } catch (error) {
+        console.log(
+            "######################################",
+            error,
+            "######################################"
+        );
+        res.status(400).json("wallah y a rien frr");
+        }
     }
 
     //Modification d'un hébergement
