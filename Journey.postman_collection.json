@@ -1,0 +1,146 @@
+{
+	"info": {
+		"_postman_id": "8a7c846c-1918-489d-9885-b3b0a3a77267",
+		"name": "Journey",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20277515"
+	},
+	"item": [
+		{
+			"name": "get user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/user/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user by id ",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "id",
+						"value": "62d7e2b8199f7a722753173c",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/user/62d7e2b8199f7a722753173c",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"user",
+						"62d7e2b8199f7a722753173c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FLight",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/flight?departure=SYD&destination=BKK&departureDate=2022-11-15&capacity=2",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"flight"
+					],
+					"query": [
+						{
+							"key": "departure",
+							"value": "SYD"
+						},
+						{
+							"key": "destination",
+							"value": "BKK"
+						},
+						{
+							"key": "departureDate",
+							"value": "2022-11-15"
+						},
+						{
+							"key": "capacity",
+							"value": "2"
+						},
+						{
+							"key": "nonStop",
+							"value": "false",
+							"disabled": true
+						},
+						{
+							"key": "max",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Hotels",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/hotels?city=PAR&name=MCLONGHM&adults=2&checkInDate=2022-08-15&checkOutDate=2022-08-25",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hotels"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "PAR"
+						},
+						{
+							"key": "name",
+							"value": "MCLONGHM"
+						},
+						{
+							"key": "adults",
+							"value": "2"
+						},
+						{
+							"key": "checkInDate",
+							"value": "2022-08-15"
+						},
+						{
+							"key": "checkOutDate",
+							"value": "2022-08-25"
+						},
+						{
+							"key": "roomQuantity",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

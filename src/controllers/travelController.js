@@ -8,15 +8,9 @@ import { JourneyAccomodation } from '../models/accommodation.model.js';
 //Create Crud for travel from travel model 
 
     //Create a travel
-    const addTravel = async (req, res) => {
-        const {  name, description, price, startDate, endDate, flightId, accomodationId, userId } = req.body;
-
-        const user = await JourneyUser.findById(userId);
-        const fligth = await JourneyFlight.findById(req.body.flightId);
-        const accomodation = await JourneyAccomodation.findById(req.body.accomodationId);
-        
-        const travel = new JourneyTravel({
-            name, 
+        const addTravel = async (req, res) => {
+            const {
+            name,
             description,
             price,
             startDate,
@@ -24,11 +18,30 @@ import { JourneyAccomodation } from '../models/accommodation.model.js';
             flightId,
             accomodationId,
             userId,
-        });
-        await travel.save();
-        console.log('########################### travel saved ###########################');
-        res.send('travel saved');
-    }
+            } = req.body;
+        
+        //   const user = await JourneyUser.findById(userId);
+        //   const fligth = await JourneyFlight.findById(req.body.flightId);
+        //   const accomodation = await JourneyAccomodation.findById(
+        //     req.body.accomodationId
+        //   );
+        
+            const travel = new JourneyTravel({
+            name,
+            description,
+            price,
+            startDate,
+            endDate,
+            flightId,
+            accomodationId,
+            userId,
+            });
+            await travel.save();
+            console.log(
+            "########################### travel saved ###########################"
+            );
+            res.send("travel saved");
+        };
 
     //Get all travels
     const getTravels = async (req, res) => {
