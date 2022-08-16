@@ -44,6 +44,8 @@ const amadeus = new Amadeus({
                 cityCode: city,
                 radius: '5',
                 radiusUnit: 'KM',
+                
+                
               }             
             );
 
@@ -55,7 +57,7 @@ const amadeus = new Amadeus({
             }
             );
 
-            // console.log(hotelID);
+            console.log(hotelID);
         
             const  { result } = await amadeus.shopping.hotelOffersSearch.get({
                 hotelIds: hotelID.join(','),
@@ -77,7 +79,7 @@ const amadeus = new Amadeus({
             error,
             "######################################"
         );
-        res.status(400).json("wallah y a rien frr");
+        res.status(400).json("c'est niete Camarade.");
         }
 
     };

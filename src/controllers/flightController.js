@@ -1,6 +1,7 @@
 //ICI c'est le CRUD du FlightController
 
 import { JourneyFlight as Flight } from "../models/flight.model.js";
+import { JourneyTravel as Travel } from "../models/travel.model.js";
 import Amadeus from "amadeus";
 import {
   getFromCache,
@@ -41,8 +42,9 @@ const addFlight = async (req, res) => {
 
 //Récupération de tous les vols
 const getFlights = async (req, res) => {
+  const { departure, destination, departureDate, capacity, idUser} = req.query;
   try {
-    const { departure, destination, departureDate, capacity } = req.query;
+    
     if (!departure || !destination || !departureDate || !capacity) {
       throw new Error("Missing parameters");
     }
@@ -72,11 +74,19 @@ const getFlights = async (req, res) => {
 
 
 
-    // send results
+   
     // store in cache for 1 hour
    // await setInCache(redis_key, JSON.stringify(data), 60);
-   console.log("########################### Flight found ###########################");
-    res.send(data);
+
+
+  console.log("########################### Flight found ###########################");
+  res.send(data);
+
+
+
+
+
+
   } catch (error) {
     console.log(
       "#################^^^^^^#####################",
@@ -85,6 +95,27 @@ const getFlights = async (req, res) => {
     );
     res.status(400).json("wallah y a rien frr");
   }
+
+  try {
+    //create a new travel entry in database
+    const travel = new Travel({
+      startDate : departureDate,
+     // paid : "Devis en cours",
+      userId : idUser,
+    });
+  
+    await travel.save();
+    console.log(
+      "########################### Travel saved ###########################"
+    );
+  } catch (error) {
+    console.log(
+      "#################^^^^^^#####################",
+      error,
+      "######################################"
+    );
+  }
+    
 };
 
 //Récupération d'un vol par son id
