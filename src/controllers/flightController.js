@@ -8,6 +8,8 @@ import {
   makeCacheKey,
   setInCache,
 } from "../managers/cacheManager.js";
+
+//Je sais... mais ca va pas les chercher quand je les mets dans le .env
 const AMADEUS_CLIENT_ID = "***REMOVED***";
 const AMADEUS_CLIENT_SECRET = "***REMOVED***";
 
@@ -73,18 +75,35 @@ const getFlights = async (req, res) => {
     });
 
 
-
+    try {
+      //create a new travel entry in database
+      const travel = new Travel({
+        startDate : departureDate,
+        paid : "Devis en cours",
+        userId : idUser,
+        flight : data,
+        creationDate : new Date()
+      });
+    
+      await travel.save();
+      console.log(
+        "########################### Travel saved ###########################"
+      );
+    } catch (error) {
+      console.log(
+        "#################^^^^^^#####################",
+        error,
+        "######################################"
+      );
+    }
    
     // store in cache for 1 hour
    // await setInCache(redis_key, JSON.stringify(data), 60);
 
 
   console.log("########################### Flight found ###########################");
+  //traiter le json data pour renvoyer un seul vol
   res.send(data);
-
-
-
-
 
 
   } catch (error) {
@@ -96,27 +115,11 @@ const getFlights = async (req, res) => {
     res.status(400).json("wallah y a rien frr");
   }
 
-  try {
-    //create a new travel entry in database
-    const travel = new Travel({
-      startDate : departureDate,
-     // paid : "Devis en cours",
-      userId : idUser,
-    });
-  
-    await travel.save();
-    console.log(
-      "########################### Travel saved ###########################"
-    );
-  } catch (error) {
-    console.log(
-      "#################^^^^^^#####################",
-      error,
-      "######################################"
-    );
-  }
+ 
     
 };
+
+
 
 //Récupération d'un vol par son id
 const getFlightById = async (req, res) => {

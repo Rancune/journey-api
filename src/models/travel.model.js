@@ -1,3 +1,4 @@
+import { json } from "express";
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
@@ -11,9 +12,10 @@ const travelSchema = Schema(
         endDate: {type: Date,required: false},
         paid: {type: String,required: false},
         userId: {type: String, required: false},
-        // flightId: [{ type: Schema.Types.ObjectId, ref: "JourneyFlight" }],
-        // accommodationId: [{ type: Schema.Types.ObjectId, ref: "JourneyAccommodation" }],
-        // userId : [{ type: Schema.Types.ObjectId, ref: "JourneyUser" }] 
+        flight: { type: JSON, required: false },
+        accommodation: { type: JSON, required: false },
+        creationDate: {type: Date,required: false},
+        
     },
 );
 
