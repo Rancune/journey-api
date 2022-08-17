@@ -1,6 +1,7 @@
 //ICI c'est le CRUD du AccomodationController
 
 import { JourneyAccomodation } from '../models/accommodation.model.js';
+import { JourneyTravel as Travel } from "../models/travel.model.js";
 import Amadeus from "amadeus";
 
 
@@ -104,7 +105,17 @@ const amadeus = new Amadeus({
 
             console.log('########################### Accommodations found by id ###########################');
 
+
+            //save hotel in travel table
+            const hotelTravel = await Travel.findById('62fce77ed4fb31401e73ce62');
+            hotelTravel.accommodation = data;
+            await hotelTravel.save();
+            console.log('########################### Accommodation saved ###########################');
+
+
             res.send(data);
+
+
         } catch (error) {
         console.log(
             "######################################",
