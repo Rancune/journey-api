@@ -8,8 +8,8 @@ export const connectDatabase = async () =>
     mongoose.connect(
       process.env.MONGO_DB_HOST,
       {
-        user: process.env.MONGO_DB_USER,
-        pass: process.env.MONGO_DB_PASS,
+        user: process.env.MONGO_USERNAME,
+        pass: process.env.MONGO_ROOTPASSWORD,
         dbName: process.env.MONGO_DB_DATABASE,
         // authSource: process.env.MONGO_DB_AUTH_SOURCE,
         // authMechanism: process.env.MONGO_DB_AUTH_MECHANISM,
