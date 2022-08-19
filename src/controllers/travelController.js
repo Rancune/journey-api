@@ -1,11 +1,13 @@
 //ICI c'est le CRUD DES TRAVELS
 import { JourneyTravel } from '../models/travel.model.js';  
-import { JourneyUser } from '../models/userModel.js';  
 import { JourneyFlight } from '../models/flight.model.js';
 import { JourneyAccomodation } from '../models/accommodation.model.js';
 
 
 //Create Crud for travel from travel model 
+
+    //create a travel
+    
 
     //Create a travel
         const addTravel = async (req, res) => {
@@ -15,9 +17,7 @@ import { JourneyAccomodation } from '../models/accommodation.model.js';
             price,
             startDate,
             endDate,
-            flightId,
-            accomodationId,
-            userId,
+            paid
             } = req.body;
         
         //   const user = await JourneyUser.findById(userId);
@@ -27,14 +27,12 @@ import { JourneyAccomodation } from '../models/accommodation.model.js';
         //   );
         
             const travel = new JourneyTravel({
-            name,
-            description,
-            price,
-            startDate,
-            endDate,
-            flightId,
-            accomodationId,
-            userId,
+                name,
+                description,
+                price,
+                startDate,
+                endDate,
+                paid: 'false',
             });
             await travel.save();
             console.log(

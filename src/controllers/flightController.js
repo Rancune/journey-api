@@ -1,19 +1,15 @@
 //ICI c'est le CRUD du FlightController
 
 import { JourneyFlight as Flight } from "../models/flight.model.js";
-import Amadeus from "amadeus";
+import { JourneyTravel as Travel } from "../models/travel.model.js";
+import { amadeus } from "./amadeusController.js";
 import {
   getFromCache,
   makeCacheKey,
   setInCache,
 } from "../managers/cacheManager.js";
-const AMADEUS_CLIENT_ID = "***REMOVED***";
-const AMADEUS_CLIENT_SECRET = "***REMOVED***";
 
-const amadeus = new Amadeus({
-  clientId: AMADEUS_CLIENT_ID,
-  clientSecret: AMADEUS_CLIENT_SECRET
-});
+
 //create CRUD for flights
 
 //Création d'un vol
@@ -41,8 +37,9 @@ const addFlight = async (req, res) => {
 
 //Récupération de tous les vols
 const getFlights = async (req, res) => {
+  const { departure, destination, departureDate, capacity} = req.query;
   try {
-    const { departure, destination, departureDate, capacity } = req.query;
+    
     if (!departure || !destination || !departureDate || !capacity) {
       throw new Error("Missing parameters");
     }
@@ -70,13 +67,40 @@ const getFlights = async (req, res) => {
       //max: 1,
     });
 
+    //dont save if not flight found
 
-
-    // send results
-    // store in cache for 1 hour
+    try {
+      //create a new travel entry in database
+      const travel = new Travel({
+        startDate : departureDate,
+        endDate : departureDate,
+        paid : "Devis en cours",
+        userId : req.user,
+        flight : data,
+        creationDate : new Date()
+      });
+    
+      await travel.save();
+      console.log(
+        "########################### Travel saved ###########################"
+      );
+    } catch (error) {
+      console.log(
+        "#################^^^^^^#####################",
+        error,
+        "######################################"
+      );
+    }
+   
+   // store in cache for 1 hour
    // await setInCache(redis_key, JSON.stringify(data), 60);
-   console.log("########################### Flight found ###########################");
-    res.send(data);
+
+
+  console.log("########################### Flight found ###########################");
+  //traiter le json data pour renvoyer un seul vol
+  res.send(data);
+
+
   } catch (error) {
     console.log(
       "#################^^^^^^#####################",
@@ -85,7 +109,12 @@ const getFlights = async (req, res) => {
     );
     res.status(400).json("wallah y a rien frr");
   }
+
+ 
+    
 };
+
+
 
 //Récupération d'un vol par son id
 const getFlightById = async (req, res) => {

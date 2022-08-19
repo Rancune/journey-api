@@ -33,7 +33,6 @@ export class Travel {
     }
 
     static fromJsonList(jsonList) {
-
         return jsonList.map(Travel.fromJson);
     }
 
@@ -62,10 +61,6 @@ export class Travel {
     async update(id, travel) {
         return await this.db.collection('travels').updateOne({ _id: new mongoose.Types.ObjectId(id) }, { $set: travel });
     }
-
-    
-
-
 }
 
 

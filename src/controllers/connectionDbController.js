@@ -8,8 +8,8 @@ export const connectDatabase = async () =>
     mongoose.connect(
       process.env.MONGO_DB_HOST,
       {
-        user: process.env.MONGO_DB_USER,
-        pass: process.env.MONGO_DB_PASS,
+        user: process.env.MONGO_USERNAME,
+        pass: process.env.MONGO_ROOTPASSWORD,
         dbName: process.env.MONGO_DB_DATABASE,
         // authSource: process.env.MONGO_DB_AUTH_SOURCE,
         // authMechanism: process.env.MONGO_DB_AUTH_MECHANISM,
@@ -21,16 +21,13 @@ export const connectDatabase = async () =>
         if (err) {
           reject(err);
         }
-        console.log("########### Connected to database ###########");
+        console.log("########################### Connected to database ###########################");
         resolve();
       }
     );
   });
 
  
-      
- // await connect('mongodb://root:root@localhost:27017/voyage?authSource=admin&authMechanism=DEFAULT');// je sais foutre pas pourquoi ni comment le authSource fonctionne 
-
 
 
 

@@ -15,7 +15,7 @@ accommodationTravel.get("/", getAccommodations);
 accommodationTravel.get("/:id", getAccommodationById);
 
 //add user
-accommodationTravel.post("/", addAccommodation);
+accommodationTravel.post("/", getAccommodations);
 
 //update user
 accommodationTravel.put("/:id", updateAccommodation);

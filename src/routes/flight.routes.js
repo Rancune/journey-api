@@ -6,7 +6,12 @@ import {
   updateFlight,
   deleteFlight,
 } from "../controllers/flightController.js";
+import { authenticateUser } from "../middlewares/authMiddleware.js";
+
+
 const flightTravel = express.Router();
+
+flightTravel.use(authenticateUser);//Middleware pour vérifier que l'utilisateur est bien connecté et recuperé son id
 
 //get all users
 flightTravel.get("/", getFlights);
