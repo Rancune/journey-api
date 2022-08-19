@@ -5,7 +5,8 @@ import express from "express";
 import routerTravel from "./routes/travel.routes.js";
 import flightTravel from "./routes/flight.routes.js";
 import accommodationTravel from "./routes/accommodation.routes.js";
-import { appFirebase } from "./controllers/firebaseController.js";
+import { loadFirebase } from "./controllers/firebaseController.js";
+import { initializeApp } from 'firebase-admin/app';
 //import { loadCacheController } from "./managers/cacheManager.js";
 
 
@@ -26,14 +27,14 @@ app.use("/flight", flightTravel);
 app.use("/hotels", accommodationTravel);
 
 const startApp = async () => {
-  try {
-      await connectDatabase();
-      appFirebase();
-      // await loadCacheController();
-    } catch (error) {
-      console.log(error);
-    }// dont continue if there is no connection to the database
+ 
+    await connectDatabase();
+    loadFirebase(); 
+    //initializeApp();
+    // await loadCacheController();
+ 
     
+
     // await addUserTest(); // for test purpose
     // await addFlightTest(); // for test purpose
     // await addAccomodationTest(); // for test purpose

@@ -2,7 +2,7 @@
 
 import { JourneyFlight as Flight } from "../models/flight.model.js";
 import { JourneyTravel as Travel } from "../models/travel.model.js";
-
+import { amadeus } from "./amadeusController.js";
 import {
   getFromCache,
   makeCacheKey,

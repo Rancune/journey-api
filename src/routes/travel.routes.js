@@ -1,8 +1,12 @@
 import express from "express";
 import { addTravel, getTravels, getTravelById, updateTravel, deleteTravel } from "../controllers/travelController.js";
+import { authenticateUser } from "../middlewares/authMiddleware.js";
+
 const routerTravel = express.Router();
 
 
+
+routerTravel.use(authenticateUser);//Middleware pour vérifier que l'utilisateur est bien connecté et recuperé son id
 
 //get all users
 routerTravel.get("/", getTravels);

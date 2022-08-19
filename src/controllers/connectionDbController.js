@@ -28,9 +28,6 @@ export const connectDatabase = async () =>
   });
 
  
-      
- // await connect('mongodb://root:root@localhost:27017/voyage?authSource=admin&authMechanism=DEFAULT');// je sais foutre pas pourquoi ni comment le authSource fonctionne 
-
 
 
 
