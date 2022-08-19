@@ -21,7 +21,7 @@ export const connectDatabase = async () =>
         if (err) {
           reject(err);
         }
-        console.log("########### Connected to database ###########");
+        console.log("########################### Connected to database ###########################");
         resolve();
       }
     );

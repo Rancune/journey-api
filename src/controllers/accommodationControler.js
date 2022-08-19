@@ -107,7 +107,7 @@ const amadeus = new Amadeus({
 
 
             //save hotel in travel table
-            const hotelTravel = await Travel.findById('62fce77ed4fb31401e73ce62');
+            const hotelTravel = await Travel.findById(' 62ff5a7f0ae5e8f08ab2467f');
             hotelTravel.accommodation = data;
             await hotelTravel.save();
             console.log('########################### Accommodation saved ###########################');

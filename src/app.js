@@ -2,10 +2,10 @@ import dotenv from "dotenv";
 dotenv.config();
 import { connectDatabase } from "./controllers/connectionDbController.js";
 import express from "express";
-import routerUser from "./routes/user.routes.js";
 import routerTravel from "./routes/travel.routes.js";
 import flightTravel from "./routes/flight.routes.js";
 import accommodationTravel from "./routes/accommodation.routes.js";
+import { appFirebase } from "./controllers/firebaseController.js";
 //import { loadCacheController } from "./managers/cacheManager.js";
 
 
@@ -21,7 +21,6 @@ const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/user", routerUser);
 app.use("/travel", routerTravel);
 app.use("/flight", flightTravel);
 app.use("/hotels", accommodationTravel);
@@ -29,16 +28,16 @@ app.use("/hotels", accommodationTravel);
 const startApp = async () => {
   try {
       await connectDatabase();
+      appFirebase();
       // await loadCacheController();
     } catch (error) {
       console.log(error);
-    }
-    
+    }// dont continue if there is no connection to the database
     
     // await addUserTest(); // for test purpose
     // await addFlightTest(); // for test purpose
-    //  await addAccomodationTest(); // for test purpose
-    //  await addTravelTest(); // for test purpose
+    // await addAccomodationTest(); // for test purpose
+    // await addTravelTest(); // for test purpose
     
     app.listen(port, () => {
       console.log(`I AM LISTENNING THE SERVER ON PORT ${port}, WITNESS ME!`);
@@ -46,5 +45,3 @@ const startApp = async () => {
 };
 
 startApp();
-
-//const RancuneConsole = (text) => process.env.DEBUG && console.log(text);

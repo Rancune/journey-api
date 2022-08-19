@@ -1,6 +1,5 @@
 //ICI c'est le CRUD DES TRAVELS
 import { JourneyTravel } from '../models/travel.model.js';  
-import { JourneyUser } from '../models/userModel.js';  
 import { JourneyFlight } from '../models/flight.model.js';
 import { JourneyAccomodation } from '../models/accommodation.model.js';
 

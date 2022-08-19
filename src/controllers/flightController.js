@@ -2,21 +2,14 @@
 
 import { JourneyFlight as Flight } from "../models/flight.model.js";
 import { JourneyTravel as Travel } from "../models/travel.model.js";
-import Amadeus from "amadeus";
+
 import {
   getFromCache,
   makeCacheKey,
   setInCache,
 } from "../managers/cacheManager.js";
 
-//Je sais... mais ca va pas les chercher quand je les mets dans le .env
-const AMADEUS_CLIENT_ID = "***REMOVED***";
-const AMADEUS_CLIENT_SECRET = "***REMOVED***";
 
-const amadeus = new Amadeus({
-  clientId: AMADEUS_CLIENT_ID,
-  clientSecret: AMADEUS_CLIENT_SECRET
-});
 //create CRUD for flights
 
 //Création d'un vol
@@ -44,7 +37,7 @@ const addFlight = async (req, res) => {
 
 //Récupération de tous les vols
 const getFlights = async (req, res) => {
-  const { departure, destination, departureDate, capacity, idUser} = req.query;
+  const { departure, destination, departureDate, capacity} = req.query;
   try {
     
     if (!departure || !destination || !departureDate || !capacity) {
@@ -74,13 +67,15 @@ const getFlights = async (req, res) => {
       //max: 1,
     });
 
+    //dont save if not flight found
 
     try {
       //create a new travel entry in database
       const travel = new Travel({
         startDate : departureDate,
+        endDate : departureDate,
         paid : "Devis en cours",
-        userId : idUser,
+        userId : req.user,
         flight : data,
         creationDate : new Date()
       });
@@ -97,7 +92,7 @@ const getFlights = async (req, res) => {
       );
     }
    
-    // store in cache for 1 hour
+   // store in cache for 1 hour
    // await setInCache(redis_key, JSON.stringify(data), 60);
 
 
