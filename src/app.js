@@ -6,7 +6,6 @@ import routerTravel from "./routes/travel.routes.js";
 import flightTravel from "./routes/flight.routes.js";
 import accommodationTravel from "./routes/accommodation.routes.js";
 import { loadFirebase } from "./controllers/firebaseController.js";
-import { initializeApp } from 'firebase-admin/app';
 //import { loadCacheController } from "./managers/cacheManager.js";
 
 
@@ -30,6 +29,7 @@ const startApp = async () => {
  
     await connectDatabase();
     loadFirebase(); 
+   
     //initializeApp();
     // await loadCacheController();
  

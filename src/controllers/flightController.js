@@ -39,7 +39,7 @@ const addFlight = async (req, res) => {
 const getFlights = async (req, res) => {
   const { departure, destination, departureDate, capacity} = req.query;
   try {
-    
+    console.log("je passe dans getFlights");
     if (!departure || !destination || !departureDate || !capacity) {
       throw new Error("Missing parameters");
     }

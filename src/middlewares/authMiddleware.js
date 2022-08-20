@@ -7,9 +7,11 @@ export const authenticateUser = async (req, res, next) => {
             return res.status(401).send('Unauthorized request');
         }
         const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = await getAuth().verifyIdToken(token);    
+        const decodedToken = await getAuth().verifyIdToken(token, true);    
         const { uid } = decodedToken.uid;
         req.user = { uid };
+        console.log("########################### User authenticated ###########################");
+        console.log(req.user);
         next();
     } catch (error) {
         res.status(401).send(error.message);
