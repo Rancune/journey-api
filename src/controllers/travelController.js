@@ -1,126 +1,176 @@
 //ICI c'est le CRUD DES TRAVELS
 import { JourneyTravel } from '../models/travel.model.js';  
-import { JourneyFlight } from '../models/flight.model.js';
-import { JourneyAccomodation } from '../models/accommodation.model.js';
+import { amadeus } from "./amadeusController.js";
+
+const { dataFlights } = {};
+const { dataHotels } = {};
 
 
 //Create Crud for travel from travel model 
 
     //create a travel with a flight and an accomodation
     const addTravelWithFlightAndAccomodation = async (req, res) => {
+        
         const { departure, destination, departureDate, capacity, city, adults, checkInDate, checkOutDate} = req.query;
-       
-       //API CALL TO GET FLIGHT
+    
         try {
 
-          if (!departure || !destination || !departureDate || !capacity) {
-            throw new Error("Missing parameters");
-          }
-      
-      
-          const { data } = await amadeus.shopping.flightOffersSearch.get({
-            originLocationCode: departure,
-            destinationLocationCode: destination,
-            departureDate: departureDate,
-            adults: capacity,
-            //max: 1,
-          });
-      
-          //dont save if not flight found
-      
-          try {
-            //create a new travel entry in database
-            const travel = new Travel({
-              startDate : departureDate,
-              endDate : departureDate,
-              paid : "Devis en cours",
-              userId : req.user,
-              flight : data,
-              creationDate : new Date()
-            });
-          
-            await travel.save();
-            console.log("########################### Travel saved ###########################");
-
-
-          } catch (error) {
-            console.log(
-              "#################^^^^^^#####################",
-              error,
-              "######################################"
-            );
-          }
-
-        } catch (error) {
-            console.log(
-              "#################^^^^^^#####################",
-              error,
-              "######################################"
-            );
-            res.status(400).json("wallah y a rien frr");
-        }
-
-        //API CALL TO GET HOTELS
-          try{
-
-    
-            if (!city || !adults || !checkInDate || !checkOutDate ) {
-                throw new Error('Missing City');
+        //API CALL TO GET FLIGHTS
+            try {
+            if (!departure || !destination || !departureDate || !capacity) {
+                throw new Error("Missing parameters");
             }
-
-            const { data } = await amadeus.referenceData.locations.hotels.byCity.get({
-                cityCode: city,
-                radius: '5',
-                radiusUnit: 'KM',
-                
-                
-              }             
-            );
-
-            console.log('########################### Hotel List UP ###########################');
-
-            //parse json to get the hotel id
-            const hotelID = data.map(hotel => {
-                return hotel.hotelId;
-            }
-            );
-
-            console.log(hotelID);
         
-            const  { result } = await amadeus.shopping.hotelOffersSearch.get({
-                hotelIds: hotelID.join(','),
-                adults: adults,
-                checkInDate: checkInDate,
-                checkOutDate: checkOutDate,
-                roomQuantity: 1
+                const dataFlight = await amadeus.shopping.flightOffersSearch.get({
+                    originLocationCode: departure,
+                    destinationLocationCode: destination,
+                    departureDate: departureDate,
+                    adults: capacity,
+                });
+                
+                console.log("########################### Flight found ###########################");
+
+                
+
+            } catch (error) {
+                console.log(
+                "#################^^^^^^#####################",
+                error,
+                "######################################"
+                );
+                res.status(400).json("wallah y a rien frr");
+            }
+
+
+            
+
+            //API CALL TO GET HOTELS
+            try{
+                if (!city || !adults || !checkInDate || !checkOutDate ) {
+                    throw new Error('Missing City');
+                }
+
+                const { data } = await amadeus.referenceData.locations.hotels.byCity.get({
+                    cityCode: city,
+                    radius: '5',
+                    radiusUnit: 'KM',
+                }             
+                );
+
+                console.log('########################### Hotel List UP ###########################');
+
+                //parse json to get the hotel id
+                const hotelID = data.map(hotel => {
+                    return hotel.hotelId;
+                }
+                );
+
+                console.log(hotelID);
+            
+                const  { dataHotels } = await amadeus.shopping.hotelOffersSearch.get({
+                    hotelIds: hotelID.join(','),
+                    adults: adults,
+                    checkInDate: checkInDate,
+                    checkOutDate: checkOutDate,
+                    roomQuantity: 1
+                }
+                );
+            
+                console.log('########################### Accommodations found by name ###########################');
+                console.log(result);
+
+            
+
+            } catch (error) {
+            console.log(
+                "######################################",
+                error,
+                "######################################"
+            );
+            res.status(400).json("c'est niete Camarade.");
+            }
+
+
+
+
+            //JSON TRAITEMENT FOR RESPONSE
+            dataFlights.map(flight => {
+                return {
+                    departure: flight.departure.iataCode,
+                    destination: flight.arrival.iataCode,
+                    departureDate: flight.departureDate,
+                    arrivalDate: flight.arrivalDate,
+                    price: flight.price.total,
+                    carrier: flight.carrierCode,
+                    flightNumber: flight.flightNumber,
+                    duration: flight.duration,           
+                }
             }
             );
-          
-            console.log('########################### Accommodations found by name ###########################');
-            console.log(result);
 
+            dataHotels.map(hotel => {
+                return {
+                    name: hotel.hotel.name,
+                    description: hotel.hotel.description,
+                    price: hotel.price.total,
+                    startDate: hotel.checkInDate,
+                    endDate: hotel.checkOutDate,  
+                    roomQuantity: hotel.roomQuantity,
+                    hotelId: hotel.hotel.hotelId,
+                    city: hotel.hotel.city.name,
+                    image: hotel.hotel.image,
+                    rating: hotel.hotel.rating,
+                    amenities: hotel.hotel.amenities
+                }
+            }
+            );
+
+
+
+            
+            //SAVE IN DATA BASE WITH FLIGHT AND ACCOMODATION AND USER ID
+
+            //dont save if not flight found
+            try {
+                //create a new travel entry in database
+                const travel = new Travel({
+                startDate : departureDate,
+                endDate : departureDate,
+                paid : "Devis en cours",
+                userId : req.user,
+                flight : data,
+                creationDate : new Date(),
+                accomodation : dataHotels,
+                flight : dataFlights
+                });
+            
+                await travel.save();
+                console.log("########################### Travel saved ###########################");
+
+
+            } catch (error) {
+                console.log(
+                "#################^^^^^^#####################",
+                error,
+                "######################################"
+                );
+            }
+
+
+            //send response to client
             res.send(result);
 
         } catch (error) {
-        console.log(
-            "######################################",
+            console.log(
+            "#################^^^^^^#####################",
             error,
             "######################################"
-        );
-        res.status(400).json("c'est niete Camarade.");
+            );
         }
 
 
-        //JSON TRAITEMENT FOR RESPONSE
-
-
-
-        
-        //SAVE IN DATA BASE WITH FLIGHT AND ACCOMODATION AND USER ID
-
-
-
-
+          
+          
     }
 
 
@@ -150,6 +200,7 @@ import { JourneyAccomodation } from '../models/accommodation.model.js';
                 startDate,
                 endDate,
                 paid: 'false',
+       
             });
             await travel.save();
             console.log(
