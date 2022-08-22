@@ -1,5 +1,5 @@
 //ICI c'est le CRUD DES TRAVELS
-import { JourneyTravel } from "../models/travel.model.js";
+import { JourneyTravel as Travel } from "../models/travel.model.js";
 import { amadeusInstance } from "./amadeusController.js";
 
 //Create Crud for travel from travel model
@@ -24,84 +24,80 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
       throw new Error("Missing parameters");
     }
 
-    const { dataFlights } =
-      await amadeusInstance.shopping.flightOffersSearch.get({
-        originLocationCode: departure,
-        destinationLocationCode: destination,
-        departureDate: departureDate,
-        adults: capacity,
-      });
+    const { data } = await amadeusInstance.shopping.flightOffersSearch.get({
+      originLocationCode: departure,
+      destinationLocationCode: destination,
+      departureDate: departureDate,
+      adults: capacity,
+    });
 
     console.log(
       "########################### Flight found ###########################"
     );
 
-    //API CALL TO GET HOTELS
-    if (!city || !adults || !checkInDate || !checkOutDate) {
-      throw new Error("Missing City");
-    }
-
-    const { data } =
-      await amadeusInstance.referenceData.locations.hotels.byCity.get({
-        cityCode: city,
-        radius: "5",
-        radiusUnit: "KM",
-      });
-
-    console.log(
-      "########################### Hotel List UP ###########################"
-    );
-
-    //parse json to get the hotel id
-    const hotelID = data.map((hotel) => {
-      return hotel.hotelId;
-    });
-
-    console.log(hotelID);
-
-    const { dataHotels } = await amadeusInstance.shopping.hotelOffersSearch.get(
-      {
-        hotelIds: hotelID.join(","),
-        adults: adults,
-        checkInDate: checkInDate,
-        checkOutDate: checkOutDate,
-        roomQuantity: 1,
-      }
-    );
-
-    console.log(
-      "########################### Accommodations found by name ###########################"
-    );
-
     //JSON TRAITEMENT FOR RESPONSE
-    const flightsData = dataFlights.map((flight) => {
+    const flightsData = data.map((flight) => {
       return {
-        departure: flight.departure.iataCode,
-        destination: flight.arrival.iataCode,
-        departureDate: flight.departureDate,
-        arrivalDate: flight.arrivalDate,
+        id: flight.id,
         price: flight.price.total,
-        carrier: flight.carrierCode,
-        flightNumber: flight.flightNumber,
-        duration: flight.duration,
+        itinaries: flight.itinaries.[],
       };
     });
 
-    const hotelsData = dataHotels.map((hotel) => {
-      return {
-        name: hotel.hotel.name,
-        description: hotel.hotel.description,
-        price: hotel.price.total,
-        startDate: hotel.checkInDate,
-        endDate: hotel.checkOutDate,
-        roomQuantity: hotel.roomQuantity,
-        hotelId: hotel.hotel.hotelId,
-        city: hotel.hotel.city.name,
-        image: hotel.hotel.image,
-        rating: hotel.hotel.rating,
-        amenities: hotel.hotel.amenities,
-      };
-    });
+    console.log(flightsData);
+
+    //API CALL TO GET HOTELS
+    // if (!city || !adults || !checkInDate || !checkOutDate) {
+    //   throw new Error("Missing City");
+    // }
+
+    // const { datah } =
+    //   await amadeusInstance.referenceData.locations.hotels.byCity.get({
+    //     cityCode: city,
+    //     radius: "5",
+    //     radiusUnit: "KM",
+    //   });
+
+    // console.log(
+    //   "########################### Hotel List UP ###########################"
+    // );
+
+    // //parse json to get the hotel id
+    // const hotelID = data.map((hotel) => {
+    //   return hotel.hotelId;
+    // });
+
+    // console.log(hotelID);
+
+    // const { dataHotels } = await amadeusInstance.shopping.hotelOffersSearch.get(
+    //   {
+    //     hotelIds: hotelID.join(","),
+    //     adults: adults,
+    //     checkInDate: checkInDate,
+    //     checkOutDate: checkOutDate,
+    //     roomQuantity: 1,
+    //   }
+    // );
+
+    // console.log(
+    //   "########################### Accommodations found by name ###########################"
+    // );
+
+    // const hotelsData = dataHotels.map((hotel) => {
+    //   return {
+    //     name: hotel.hotel.name,
+    //     description: hotel.hotel.description,
+    //     price: hotel.price.total,
+    //     startDate: hotel.checkInDate,
+    //     endDate: hotel.checkOutDate,
+    //     roomQuantity: hotel.roomQuantity,
+    //     hotelId: hotel.hotel.hotelId,
+    //     city: hotel.hotel.city.name,
+    //     image: hotel.hotel.image,
+    //     rating: hotel.hotel.rating,
+    //     amenities: hotel.hotel.amenities,
+    //   };
+    // });
 
     //SAVE IN DATA BASE WITH FLIGHT AND ACCOMODATION AND USER ID
 
@@ -115,7 +111,7 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
         userId: req.user,
         flight: data,
         creationDate: new Date(),
-        accomodation: hotelsData,
+        //accomodation: hotelsData,
         flight: flightsData,
       });
 
@@ -132,7 +128,7 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
     }
 
     //send response to client
-    res.send(dataFlights);
+    res.send(flightsData);
   } catch (error) {
     console.log(
       "#################^^^^^^#####################",

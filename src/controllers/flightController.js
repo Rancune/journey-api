@@ -36,7 +36,6 @@ const addFlight = async (req, res) => {
 
 //Récupération de tous les vols
 const getFlights = async (req, res) => {
-  console.log("je suis dans les vols");
   const { departure, destination, departureDate, capacity } = req.query;
   try {
     if (!departure || !destination || !departureDate || !capacity) {
