@@ -1,12 +1,15 @@
 import Amadeus from "amadeus";
 
+export const loadAmadeus = () => {
+  amadeusInstance = new Amadeus({
+    // clientId: "***REMOVED***",
+    // clientSecret: "***REMOVED***",
+    clientId: process.env.AMADEUS_CLIENT_ID,
+    clientSecret: process.env.AMADEUS_CLIENT_SECRET,
+  });
+  console.log(
+    "########################### Init Amadeus ###########################"
+  );
+};
 
-const AMADEUS_CLIENT_ID = process.env.AMADEUS_CLIENT_ID;
-const AMADEUS_CLIENT_SECRET = process.env.AMADEUS_CLIENT_SECRET;
-
-export const amadeus = new Amadeus({
-  clientId: "***REMOVED***",
-  clientSecret: "***REMOVED***"
-});
-
-export default amadeus;
+export let amadeusInstance;

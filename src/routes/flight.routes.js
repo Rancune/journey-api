@@ -8,24 +8,23 @@ import {
 } from "../controllers/flightController.js";
 import { authenticateUser } from "../middlewares/authMiddleware.js";
 
-
 const flightTravel = express.Router();
 
-flightTravel.use(authenticateUser);//Middleware pour vérifier que l'utilisateur est bien connecté et recuperé son id
+flightTravel.use(authenticateUser); //Middleware pour vérifier que l'utilisateur est bien connecté et recuperé son id
 
-//get all users
+//get all flight
 flightTravel.get("/", getFlights);
 
-//get user by id
+//get flight by id
 flightTravel.get("/:id", getFlightById);
 
-//add user
+//add flight
 flightTravel.post("/", addFlight);
 
-//update user
+//update flight
 flightTravel.put("/:id", updateFlight);
 
-//delete user
+//delete flight
 flightTravel.delete("/:id", deleteFlight);
 
 export default flightTravel;

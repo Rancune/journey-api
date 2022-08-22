@@ -1,26 +1,26 @@
 import express from "express";
 import {
-    addAccommodation,
-    getAccommodations,
-    getAccommodationById,
-    updateAccommodation,
-    deleteAccommodation,
+  addAccommodation,
+  getAccommodations,
+  getAccommodationById,
+  updateAccommodation,
+  deleteAccommodation,
 } from "../controllers/accommodationControler.js";
 const accommodationTravel = express.Router();
 
-//get all users
+//get all Hotels
 accommodationTravel.get("/", getAccommodations);
 
-//get user by id
+//get Hotel by id
 accommodationTravel.get("/:id", getAccommodationById);
 
-//add user
+//add Hotel
 accommodationTravel.post("/", getAccommodations);
 
-//update user
+//update Hotels
 accommodationTravel.put("/:id", updateAccommodation);
 
-//delete user
+//delete Hotels
 accommodationTravel.delete("/:id", deleteAccommodation);
 
 export default accommodationTravel;

@@ -2,13 +2,12 @@
 
 import { JourneyFlight as Flight } from "../models/flight.model.js";
 import { JourneyTravel as Travel } from "../models/travel.model.js";
-import { amadeus } from "./amadeusController.js";
-import {
-  getFromCache,
-  makeCacheKey,
-  setInCache,
-} from "../managers/cacheManager.js";
-
+import { amadeusInstance } from "./amadeusController.js";
+// import {
+//   getFromCache,
+//   makeCacheKey,
+//   setInCache,
+// } from "../managers/cacheManager.js";
 
 //create CRUD for flights
 
@@ -37,14 +36,12 @@ const addFlight = async (req, res) => {
 
 //Récupération de tous les vols
 const getFlights = async (req, res) => {
-  const { departure, destination, departureDate, capacity} = req.query;
+  console.log("je suis dans les vols");
+  const { departure, destination, departureDate, capacity } = req.query;
   try {
-    console.log("je passe dans getFlights");
     if (!departure || !destination || !departureDate || !capacity) {
       throw new Error("Missing parameters");
     }
-
-
 
     // const redis_key = makeCacheKey(
     //   "flights",
@@ -57,9 +54,7 @@ const getFlights = async (req, res) => {
     //   return res.json(JSON.parse(cache));
     // }
 
-
-
-    const { data } = await amadeus.shopping.flightOffersSearch.get({
+    const { data } = await amadeusInstance.shopping.flightOffersSearch.get({
       originLocationCode: departure,
       destinationLocationCode: destination,
       departureDate: departureDate,
@@ -72,14 +67,14 @@ const getFlights = async (req, res) => {
     try {
       //create a new travel entry in database
       const travel = new Travel({
-        startDate : departureDate,
-        endDate : departureDate,
-        paid : "Devis en cours",
-        userId : req.user,
-        flight : data,
-        creationDate : new Date()
+        startDate: departureDate,
+        endDate: departureDate,
+        paid: "Devis en cours",
+        userId: req.user,
+        flight: data,
+        creationDate: new Date(),
       });
-    
+
       await travel.save();
       console.log(
         "########################### Travel saved ###########################"
@@ -91,16 +86,15 @@ const getFlights = async (req, res) => {
         "######################################"
       );
     }
-   
-   // store in cache for 1 hour
-   // await setInCache(redis_key, JSON.stringify(data), 60);
 
+    // store in cache for 1 hour
+    // await setInCache(redis_key, JSON.stringify(data), 60);
 
-  console.log("########################### Flight found ###########################");
-  //traiter le json data pour renvoyer un seul vol
-  res.send(data);
-
-
+    console.log(
+      "########################### Flight found ###########################"
+    );
+    //traiter le json data pour renvoyer un seul vol
+    res.send(data);
   } catch (error) {
     console.log(
       "#################^^^^^^#####################",
@@ -109,12 +103,7 @@ const getFlights = async (req, res) => {
     );
     res.status(400).json("wallah y a rien frr");
   }
-
- 
-    
 };
-
-
 
 //Récupération d'un vol par son id
 const getFlightById = async (req, res) => {

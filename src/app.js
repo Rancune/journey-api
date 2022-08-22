@@ -6,9 +6,8 @@ import routerTravel from "./routes/travel.routes.js";
 import flightTravel from "./routes/flight.routes.js";
 import accommodationTravel from "./routes/accommodation.routes.js";
 import { loadFirebase } from "./controllers/firebaseController.js";
+import { loadAmadeus } from "./controllers/amadeusController.js";
 //import { loadCacheController } from "./managers/cacheManager.js";
-
-
 
 //For Test PURPOSE ONLY
 // import { addUserTest } from "./controllers/test/addUserTestController.js"; // for test purpose
@@ -26,23 +25,20 @@ app.use("/flight", flightTravel);
 app.use("/hotels", accommodationTravel);
 
 const startApp = async () => {
- 
-    await connectDatabase();
-    loadFirebase(); 
-   
-    //initializeApp();
-    // await loadCacheController();
- 
-    
+  await connectDatabase();
+  loadFirebase();
+  loadAmadeus();
 
-    // await addUserTest(); // for test purpose
-    // await addFlightTest(); // for test purpose
-    // await addAccomodationTest(); // for test purpose
-    // await addTravelTest(); // for test purpose
-    
-    app.listen(port, () => {
-      console.log(`I AM LISTENNING THE SERVER ON PORT ${port}, WITNESS ME!`);
-    });
+  // await loadCacheController();
+
+  // await addUserTest(); // for test purpose
+  // await addFlightTest(); // for test purpose
+  // await addAccomodationTest(); // for test purpose
+  // await addTravelTest(); // for test purpose
+
+  app.listen(port, () => {
+    console.log(`I AM LISTENNING THE SERVER ON PORT ${port}, WITNESS ME!`);
+  });
 };
 
 startApp();
