@@ -52,7 +52,7 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
       throw new Error("Missing City");
     }
 
-    const resultHotels = (city, adults, checkInDate, checkOutDate) => {};
+    //const resultHotels = (city, adults, checkInDate, checkOutDate) => {};
 
     const { data } =
       await amadeusInstance.referenceData.locations.hotels.byCity.get({
@@ -73,21 +73,20 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
 
     console.log(hotelID);
 
-    const { dataHotels } = await amadeusInstance.shopping.hotelOffersSearch.get(
-      {
-        hotelIds: hotelID.join(","),
-        adults: adults,
-        checkInDate: checkInDate,
-        checkOutDate: checkOutDate,
-        roomQuantity: 1,
-      }
-    );
+    const { result } = await amadeusInstance.shopping.hotelOffersSearch.get({
+      hotelIds: hotelID.join(","),
+      adults: adults,
+      checkInDate: checkInDate,
+      checkOutDate: checkOutDate,
+      roomQuantity: 1,
+    });
 
     console.log(
       "########################### Accommodations found by name ###########################"
     );
+    console.log(result);
 
-    const hotelsData = dataHotels.map((hotel) => {
+    const hotelsData = result.data.map((hotel) => {
       return {
         name: hotel.hotel.name,
         description: hotel.hotel.description,
