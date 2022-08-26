@@ -36,14 +36,16 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
     );
 
     //JSON TRAITEMENT FOR RESPONSE
-    const flightsData = data.map((flight) => {
+    const flightDatas = data.map((flight) => {
       return {
-        id: flight.id,
-        price: flight.price.total,
-        itinaries: flight.itineraries, //comment recuperer un tableau dans un json
+        flight: {
+          id: flight.id,
+          price: flight.price.total,
+          itinaries: flight.itineraries, //comment recuperer un tableau dans un json
+        },
       };
     });
-    // console.log(flightsData); //resultat final de la recherche des vols
+    console.log(flightDatas[0]); //resultat final de la recherche des vols
 
     //API CALL TO GET HOTELS
 
@@ -76,11 +78,11 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
     console.log(
       "########################### Accommodations found by name ###########################"
     );
-    console.log(result);
+    //console.log(result);
 
-    const hotelDatas = JSON.parse(result);
+    const hotelDatas = JSON.parse(JSON.stringify(result.data[0]));
 
-    // const hotelsData = result.data.map((hotel: hotel[], offers) => {
+    // const hotelsData = result.data.map(() => {
     //   return {
     //     name: hotel.name,
     //     description: hotel.hotel.description,
@@ -94,35 +96,36 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
 
     // //SAVE IN DATA BASE WITH FLIGHT AND ACCOMODATION AND USER ID
 
-    // //dont save if not flight found
-    // try {
-    //   //create a new travel entry in database
-    //   const travel = new Travel({
-    //     startDate: departureDate,
-    //     endDate: departureDate,
-    //     paid: "Devis en cours",
-    //     userId: req.user,
-    //     creationDate: new Date(),
-    //     //accomodation: hotelsData[0],
-    //     // flight: flightsData[0],
-    //   });
+    //dont save if not flight found
+    try {
+      //create a new travel entry in database
+      const travel = new Travel({
+        startDate: departureDate,
+        endDate: departureDate,
+        paid: "Devis en cours",
+        userId: req.user,
+        creationDate: new Date(),
+        accomodation: hotelDatas,
+        flight: flightDatas[0],
+      });
 
-    //   await travel.save();
-    //   console.log(
-    //     "########################### Travel saved ###########################"
-    //   );
-    // } catch (error) {
-    //   console.log(
-    //     "#################^^^^^^#####################",
-    //     error,
-    //     "######################################"
-    //   );
-    // }
+      await travel.save();
+      console.log(
+        "########################### Travel saved ###########################"
+      );
+    } catch (error) {
+      console.log(
+        "#################^^^^^^#####################",
+        error,
+        "######################################"
+      );
+    }
 
+    const travelJson = { ...flightDatas[0], ...hotelDatas };
+
+    console.log(travelJson);
     // //send response to client
-
-    // // res.send(flightsData);
-    res.send(hotelsData);
+    res.send(travelJson);
   } catch (error) {
     console.log(
       "#################^^^^^^#####################",
