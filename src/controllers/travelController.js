@@ -80,7 +80,7 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
     );
     //console.log(result);
 
-    const hotelDatas = JSON.parse(JSON.stringify(result.data[0]));
+    const hotelDatas = result.data[0];
 
     // const hotelsData = result.data.map(() => {
     //   return {
@@ -105,7 +105,7 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
         paid: "Devis en cours",
         userId: req.user,
         creationDate: new Date(),
-        accomodation: hotelDatas,
+        accommodation: hotelDatas,
         flight: flightDatas[0],
       });
 
@@ -124,7 +124,7 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
     const travelJson = { ...flightDatas[0], ...hotelDatas };
 
     console.log(travelJson);
-    // //send response to client
+
     res.send(travelJson);
   } catch (error) {
     console.log(
@@ -228,6 +228,7 @@ export {
   addTravel,
   getTravels,
   getTravelById,
+  getTravelByUserId,
   updateTravel,
   deleteTravel,
 };
