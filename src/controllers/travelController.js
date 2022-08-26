@@ -20,31 +20,30 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
   try {
     //API CALL TO GET FLIGHTS
 
-    // if (!departure || !destination || !departureDate || !capacity) {
-    //   throw new Error("Missing parameters");
-    // }
+    if (!departure || !destination || !departureDate || !capacity) {
+      throw new Error("Missing parameters");
+    }
 
-    // const { data } = await amadeusInstance.shopping.flightOffersSearch.get({
-    //   originLocationCode: departure,
-    //   destinationLocationCode: destination,
-    //   departureDate: departureDate,
-    //   adults: capacity,
-    // });
+    const { data } = await amadeusInstance.shopping.flightOffersSearch.get({
+      originLocationCode: departure,
+      destinationLocationCode: destination,
+      departureDate: departureDate,
+      adults: capacity,
+    });
 
-    // console.log(
-    //   "########################### Flight found ###########################"
-    // );
+    console.log(
+      "########################### Flight found ###########################"
+    );
 
-    // //JSON TRAITEMENT FOR RESPONSE
-    // const flightsData = data.map((flight) => {
-    //   return {
-    //     id: flight.id,
-    //     price: flight.price.total,
-    //     itinaries: flight.itineraries, //comment recuperer un tableau dans un json
-    //   };
-    // });
-
-    // console.log(flightsData[0]); //For Test Purpose only
+    //JSON TRAITEMENT FOR RESPONSE
+    const flightsData = data.map((flight) => {
+      return {
+        id: flight.id,
+        price: flight.price.total,
+        itinaries: flight.itineraries, //comment recuperer un tableau dans un json
+      };
+    });
+    // console.log(flightsData); //resultat final de la recherche des vols
 
     //API CALL TO GET HOTELS
 
@@ -52,9 +51,7 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
       throw new Error("Missing City");
     }
 
-    //const resultHotels = (city, adults, checkInDate, checkOutDate) => {};
-
-    const { data } =
+    const { body } =
       await amadeusInstance.referenceData.locations.hotels.byCity.get({
         cityCode: city,
         radius: "5",
@@ -64,17 +61,12 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
     console.log(
       "########################### Hotel List UP ###########################"
     );
-    console.log(data);
 
-    //parse json to get the hotel id
-    const hotelID = data.map((hotel) => {
-      return hotel.hotelId;
-    });
-
-    console.log(hotelID);
+    const hotelIDs = JSON.parse(body);
+    console.log(hotelIDs.data[0].hotelId);
 
     const { result } = await amadeusInstance.shopping.hotelOffersSearch.get({
-      hotelIds: hotelID.join(","),
+      hotelIds: hotelIDs.data[0].hotelId,
       adults: adults,
       checkInDate: checkInDate,
       checkOutDate: checkOutDate,
@@ -86,52 +78,51 @@ const addTravelWithFlightAndAccomodation = async (req, res) => {
     );
     console.log(result);
 
-    const hotelsData = result.data.map((hotel) => {
-      return {
-        name: hotel.hotel.name,
-        description: hotel.hotel.description,
-        price: hotel.price.total,
-        startDate: hotel.checkInDate,
-        endDate: hotel.checkOutDate,
-        roomQuantity: hotel.roomQuantity,
-        hotelId: hotel.hotel.hotelId,
-        city: hotel.hotel.city.name,
-        image: hotel.hotel.image,
-        rating: hotel.hotel.rating,
-        amenities: hotel.hotel.amenities,
-      };
-    });
+    const hotelDatas = JSON.parse(result);
 
-    //SAVE IN DATA BASE WITH FLIGHT AND ACCOMODATION AND USER ID
+    // const hotelsData = result.data.map((hotel: hotel[], offers) => {
+    //   return {
+    //     name: hotel.name,
+    //     description: hotel.hotel.description,
+    //     // price: offers.price.total,
+    //     // currency: offers.price.currency,
+    //     // roomDescription: offers.room.description.text,
+    //   };
+    // });
 
-    //dont save if not flight found
-    try {
-      //create a new travel entry in database
-      const travel = new Travel({
-        startDate: departureDate,
-        endDate: departureDate,
-        paid: "Devis en cours",
-        userId: req.user,
-        flight: data,
-        creationDate: new Date(),
-        accomodation: hotelsData[0],
-        flight: flightsData[0],
-      });
+    console.log(hotelDatas); //resultat final de la recherche des hotels
 
-      await travel.save();
-      console.log(
-        "########################### Travel saved ###########################"
-      );
-    } catch (error) {
-      console.log(
-        "#################^^^^^^#####################",
-        error,
-        "######################################"
-      );
-    }
+    // //SAVE IN DATA BASE WITH FLIGHT AND ACCOMODATION AND USER ID
 
-    //send response to client
-    res.send(flightsData);
+    // //dont save if not flight found
+    // try {
+    //   //create a new travel entry in database
+    //   const travel = new Travel({
+    //     startDate: departureDate,
+    //     endDate: departureDate,
+    //     paid: "Devis en cours",
+    //     userId: req.user,
+    //     creationDate: new Date(),
+    //     //accomodation: hotelsData[0],
+    //     // flight: flightsData[0],
+    //   });
+
+    //   await travel.save();
+    //   console.log(
+    //     "########################### Travel saved ###########################"
+    //   );
+    // } catch (error) {
+    //   console.log(
+    //     "#################^^^^^^#####################",
+    //     error,
+    //     "######################################"
+    //   );
+    // }
+
+    // //send response to client
+
+    // // res.send(flightsData);
+    res.send(hotelsData);
   } catch (error) {
     console.log(
       "#################^^^^^^#####################",
