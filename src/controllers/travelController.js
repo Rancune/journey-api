@@ -162,7 +162,7 @@ const addTravel = async (req, res) => {
 
 //Get all travels
 const getTravels = async (req, res) => {
-  const travels = await JourneyTravel.find();
+  const travels = await Travel.find();
   res.send(travels);
 };
 
@@ -179,7 +179,8 @@ const getTravelById = async (req, res) => {
 //Get a travel by user id
 const getTravelByUserId = async (req, res) => {
   const { userId } = req.user;
-  const travels = await JourneyTravel.find({ userId });
+  const travels = await Travel.find({ userId });
+  console.log(travels);
   res.send(travels);
 };
 
