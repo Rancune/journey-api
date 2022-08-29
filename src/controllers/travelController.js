@@ -178,9 +178,12 @@ const getTravelById = async (req, res) => {
 
 //Get a travel by user id
 const getTravelByUserId = async (req, res) => {
-  const { userId } = req.user;
-  const travels = await Travel.find({ userId });
-  console.log(travels);
+  const userId = req.user;
+  const query = { userId: userId };
+  const travels = await Travel.find(query);
+  console.log(
+    "########################### travel found by userId ###########################"
+  );
   res.send(travels);
 };
 
