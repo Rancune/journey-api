@@ -5,6 +5,7 @@ import express from "express";
 import routerTravel from "./routes/travel.routes.js";
 import flightTravel from "./routes/flight.routes.js";
 import accommodationTravel from "./routes/accommodation.routes.js";
+import routerBackOffice from "./routes/backoffice.routes.js";
 import { loadFirebase } from "./controllers/firebaseController.js";
 import { loadAmadeus } from "./controllers/amadeusController.js";
 //import { loadCacheController } from "./managers/cacheManager.js";
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/travel", routerTravel);
 app.use("/flight", flightTravel);
 app.use("/hotels", accommodationTravel);
+app.use("/back", routerBackOffice);
 
 const startApp = async () => {
   await connectDatabase();

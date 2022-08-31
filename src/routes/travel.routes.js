@@ -15,7 +15,7 @@ const routerTravel = express.Router();
 routerTravel.use(authenticateUser); //Middleware pour vérifier que l'utilisateur est bien connecté et recuperé son id
 
 //get Travel With Flight And Accomodation
-routerTravel.get("/", getTravelByUserId);
+routerTravel.get("/", getTravels);
 
 //get travel by id
 routerTravel.get("/:id", getTravelById);
