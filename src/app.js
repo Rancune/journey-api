@@ -8,6 +8,8 @@ import accommodationTravel from "./routes/accommodation.routes.js";
 import routerBackOffice from "./routes/backoffice.routes.js";
 import { loadFirebase } from "./controllers/firebaseController.js";
 import { loadAmadeus } from "./controllers/amadeusController.js";
+import cors from "cors";
+
 //import { loadCacheController } from "./managers/cacheManager.js";
 
 //For Test PURPOSE ONLY
@@ -17,7 +19,19 @@ import { loadAmadeus } from "./controllers/amadeusController.js";
 // import { addTravelTest } from "./controllers/test/addTravelTest.controller.js";
 
 const app = express();
-const port = 3000;
+const port = 4000;
+
+// app.use(
+//   cors({
+//     origin: [
+//       process.env.FRONT_END_URL,
+//       process.env.SOCKET_ADMIN_URL,
+//       process.env.DEV_URL,
+//     ],
+//     credentials: true,
+//   })
+// );
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,6 +39,9 @@ app.use("/travel", routerTravel);
 app.use("/flight", flightTravel);
 app.use("/hotels", accommodationTravel);
 app.use("/back", routerBackOffice);
+app.get("/toto", (req, res) => {
+  res.send("toto");
+});
 
 const startApp = async () => {
   await connectDatabase();
