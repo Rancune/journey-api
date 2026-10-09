@@ -31,7 +31,11 @@ const port = 4000;
 //     credentials: true,
 //   })
 // );
-app.use(cors());
+const allowedOrigins = (process.env.FRONT_END_URL || "")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+app.use(cors({ origin: allowedOrigins }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
